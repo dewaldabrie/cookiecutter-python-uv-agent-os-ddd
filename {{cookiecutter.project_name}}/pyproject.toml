@@ -5,7 +5,10 @@ description = "{{cookiecutter.project_description}}"
 authors = [{ name = "{{cookiecutter.author}}", email = "{{cookiecutter.email}}" }]
 readme = "README.md"
 keywords = ['python']
-requires-python = ">=3.9,<4.0"
+requires-python = ">=3.11,<4.0"
+dependencies = [
+    "nicegui>=1.0.0",
+]
 classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python",
@@ -27,7 +30,6 @@ Documentation = "https://{{cookiecutter.author_github_handle}}.github.io/{{cooki
 dev = [
     "pytest>=7.2.0",
     "pre-commit>=2.20.0",
-    "tox-uv>=1.11.3",
     {% if cookiecutter.deptry == 'y' %}"deptry>=0.23.0",{% endif %}
     {% if cookiecutter.type_checker == "mypy" -%}
         "mypy>=0.991",
@@ -38,7 +40,9 @@ dev = [
     "ruff>=0.11.5",
     {% if cookiecutter.mkdocs == 'y' %}"mkdocs>=1.4.2",
     "mkdocs-material>=8.5.10",
-    "mkdocstrings[python]>=0.26.1",{% endif %}
+    "mkdocstrings[python]>=0.26.1",
+    "mkdocs-mermaid2-plugin>=1.0.0",{% endif %}
+    "playwright>=1.0.0",
 ]
 
 [build-system]
@@ -68,7 +72,12 @@ no_implicit_optional = true
 check_untyped_defs = true
 warn_return_any = true
 warn_unused_ignores = true
+warn_unused_configs = true
 show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = "nicegui.*"
+ignore_missing_imports = true
 {%- else -%}
 [tool.ty.environment]
 python = "./.venv"
@@ -76,7 +85,16 @@ python-version = "3.9"
 {%- endif %}
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+minversion = "6.0"
+addopts = "--strict-markers --import-mode=importlib"
+testpaths = [
+    "tests",
+    "integration_tests",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "api: marks tests as API related",
+]
 
 [tool.ruff]
 target-version = "py39"
@@ -127,7 +145,10 @@ ignore = [
 "tests/*" = ["S101"]
 
 [tool.ruff.format]
-preview = true
+quote-style = "single"
+indent-style = "space"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
 
 {% if cookiecutter.codecov == "y" -%}
 [tool.coverage.report]
@@ -143,3 +164,7 @@ source = [
     {%- endif -%}
 ]
 {% endif %}
+
+# Pre-commit configuration can be defined here or in .pre-commit-config.yaml
+# Most projects still use .pre-commit-config.yaml as it's the standard
+

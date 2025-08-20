@@ -9,9 +9,16 @@ copyright: Maintained by <a href="https://{{cookiecutter.author_github_handle}}.
 
 nav:
   - Home: index.md
+  - Architecture:
+    - Overview: architecture/overview.md
+    - Domain Layer: architecture/domain.md
+    - Application Layer: architecture/application.md
+    - Infrastructure Layer: architecture/infrastructure.md
+    - Presentation Layer: architecture/presentation.md
   - Modules: modules.md
 plugins:
   - search
+  - mermaid2
   - mkdocstrings:
       handlers:
         python:

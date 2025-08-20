@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        enable-cache: true
+
+    - name: Set up Python ${{ "{{" }} matrix.python-version {{ "}}" }}
+      run: uv python install ${{ "{{" }} matrix.python-version {{ "}}" }}
+
+    - name: Install dependencies
+      run: uv sync --all-extras --dev
+
+    - name: Run linting
+      run: uv run ruff check .
+
+    - name: Run type checking
+      run: |
+        {% if cookiecutter.type_checker == "mypy" -%}
+        uv run mypy .
+        {%- elif cookiecutter.type_checker == "ty" -%}
+        uv run ty check
+        {%- endif %}
+
+    - name: Run tests
+      run: |
+        {% if cookiecutter.codecov == 'y' -%}
+        uv run pytest --cov --cov-config=pyproject.toml --cov-report=xml --cov-report=term
+        {%- else -%}
+        uv run pytest
+        {%- endif %}
+
+    {% if cookiecutter.codecov == 'y' -%}
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: true
+        token: ${{ "{{" }} secrets.CODECOV_TOKEN {{ "}}" }}
+    {%- endif %}
+
+  {% if cookiecutter.deptry == 'y' -%}
+  dependency-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        enable-cache: true
+
+    - name: Set up Python
+      run: uv python install 3.11
+
+    - name: Install dependencies
+      run: uv sync --all-extras --dev
+
+    - name: Check dependencies
+      run: uv run deptry .
+  {%- endif %}
+
+  {% if cookiecutter.mkdocs == 'y' -%}
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        enable-cache: true
+
+    - name: Set up Python
+      run: uv python install 3.11
+
+    - name: Install dependencies
+      run: uv sync --all-extras --dev
+
+    - name: Build docs
+      run: uv run mkdocs build
+  {%- endif %}

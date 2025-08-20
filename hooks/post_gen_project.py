@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import os
 import shutil
+import subprocess
+import sys
 
 PROJECT_DIRECTORY = os.path.realpath(os.path.curdir)
 
@@ -21,6 +23,18 @@ def move_file(filepath: str, target: str) -> None:
 
 def move_dir(src: str, target: str) -> None:
     shutil.move(os.path.join(PROJECT_DIRECTORY, src), os.path.join(PROJECT_DIRECTORY, target))
+
+
+def run_command(command: list[str]) -> None:
+    """Run a shell command"""
+    try:
+        subprocess.run(command, cwd=PROJECT_DIRECTORY, check=True)
+        print(f"✓ Successfully ran: {' '.join(command)}")
+    except subprocess.CalledProcessError as e:
+        print(f"✗ Failed to run: {' '.join(command)}")
+        print(f"Error: {e}")
+    except FileNotFoundError:
+        print(f"✗ Command not found: {command[0]}. Please install it manually.")
 
 
 if __name__ == "__main__":
@@ -91,3 +105,27 @@ if __name__ == "__main__":
         if os.path.isdir("src"):
             remove_dir("src")
         move_dir("{{cookiecutter.project_slug}}", os.path.join("src", "{{cookiecutter.project_slug}}"))
+
+    # Initialize git repository
+    print("\n🚀 Setting up your Agent OS project...")
+    run_command(["git", "init"])
+    
+    # Install dependencies
+    print("\n📦 Installing dependencies...")
+    run_command(["uv", "sync"])
+    
+    # Install playwright browsers
+    print("\n🎭 Installing Playwright browsers...")
+    run_command(["uv", "run", "playwright", "install"])
+    
+    print(f"\n✅ Project {{cookiecutter.project_name}} has been created successfully!")
+    print(f"📁 Project location: {PROJECT_DIRECTORY}")
+    print("\n🔗 Next steps:")
+    print("1. cd {{cookiecutter.project_slug}}")
+    print("2. Install just task runner: curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin")
+    print("3. Review and update .agent-os/product/ files with your project details")
+    print("4. View available tasks: just list")
+    print("5. Start developing with: uv run python -m {{cookiecutter.project_slug}}.presentation.gui")
+    print("6. Run tests with: just test")
+    print("7. Run QA checks with: just qa")
+    print("8. Generate docs with: just doc")

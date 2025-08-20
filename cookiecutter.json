@@ -1,12 +1,18 @@
 {
-  "author": "Florian Maas",
-  "email": "fpgmaas@gmail.com",
-  "author_github_handle": "fpgmaas",
-  "project_name": "example-project",
-  "project_slug": "{{cookiecutter.project_name|lower|replace('-', '_')}}",
-  "project_description": "This is a template repository for Python projects that use uv for their dependency management.",
+  "author": "Your Name",
+  "email": "your.email@example.com",
+  "author_github_handle": "your_github_handle",
+  "project_name": "My Agent OS Project",
+  "project_slug": "{{cookiecutter.project_name|lower|replace('-', '_')|replace(' ', '_')}}",
+  "project_description": "An Agent OS project with clean architecture and domain-driven design",
+  "main_idea": "What is the core concept and purpose of your project?",
+  "key_features": "Feature 1, Feature 2, Feature 3",
+  "target_users": "Who will use this application and in what scenarios?",
+  "tech_stack_preference": [
+    "default",
+    "custom"
+  ],
   "layout": [
-    "flat",
     "src"
   ],
   "include_github_actions": [
@@ -21,10 +27,7 @@
     "y",
     "n"
   ],
-  "mkdocs": [
-    "y",
-    "n"
-  ],
+  "mkdocs": "y",
   "codecov": [
     "y",
     "n"

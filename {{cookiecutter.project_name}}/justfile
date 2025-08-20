@@ -1,0 +1,102 @@
+# List available commands
+list:
+    @just --list --unsorted
+
+# Install the project in development mode
+install:
+    uv sync
+
+# Run tests
+test *args:
+    uv run pytest {{ "{{" }}args{{ "}}" }}
+
+# Run tests with coverage
+test-cov:
+    {% if cookiecutter.codecov == 'y' -%}
+    uv run pytest --cov --cov-config=pyproject.toml --cov-report=xml --cov-report=term
+    {%- else -%}
+    uv run pytest
+    {%- endif %}
+
+# Run tests in debug mode
+pdb *args:
+    uv run pytest --pdb {{ "{{" }}args{{ "}}" }}
+
+# Format code with ruff
+fmt:
+    uv run ruff format .
+    uv run ruff check --fix .
+
+# Lint code with ruff
+lint:
+    uv run ruff check .
+
+# Type check with mypy or ty
+typecheck:
+    {% if cookiecutter.type_checker == "mypy" -%}
+    uv run mypy .
+    {%- elif cookiecutter.type_checker == "ty" -%}
+    uv run ty check
+    {%- endif %}
+
+# Run all quality assurance checks
+qa: fmt lint typecheck
+
+# Run checks for continuous integration
+ci: lint typecheck test-cov
+
+# Test across multiple Python versions
+testall:
+    just test PYTHON_VERSION=3.9
+    just test PYTHON_VERSION=3.10
+    just test PYTHON_VERSION=3.11
+    just test PYTHON_VERSION=3.12
+    just test PYTHON_VERSION=3.13
+
+{% if cookiecutter.mkdocs == 'y' -%}
+# Serve documentation locally
+doc:
+    uv run mkdocs serve
+
+# Build and deploy documentation
+doc-build:
+    uv run mkdocs gh-deploy --force
+{%- endif %}
+
+# Build package
+build:
+    uv build
+
+# Clean build artifacts
+clean:
+    rm -rf build/
+    rm -rf dist/
+    rm -rf *.egg-info/
+    find . -type d -name __pycache__ -exec rm -rf {} +
+    find . -type f -name "*.pyc" -delete
+
+# Install pre-commit hooks
+pre-commit-install:
+    uv run pre-commit install
+
+# Run pre-commit on all files
+pre-commit:
+    uv run pre-commit run --all-files
+
+{% if cookiecutter.deptry == 'y' -%}
+# Check for unused dependencies
+deps-check:
+    uv run deptry .
+{%- endif %}
+
+# Run playwright tests
+playwright:
+    uv run python -m playwright install
+    uv run python -m pytest tests/playwright/
+
+# Full development setup
+setup: install pre-commit-install
+
+# Print project version
+version:
+    @grep "^version" pyproject.toml | cut -d'"' -f2

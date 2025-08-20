@@ -1,27 +1,22 @@
-<p align="center">
-  <img width="600" src="https://raw.githubusercontent.com/fpgmaas/cookiecutter-uv/main/docs/static/cookiecutter.svg">
-</p style = "margin-bottom: 2rem;">
+# Cookiecutter Agent OS DDD Template
+
+A cookiecutter template for creating Python projects with Clean Architecture, Domain-Driven Design (DDD), and Agent OS integration.
 
 ---
 
-[![Build status](https://img.shields.io/github/actions/workflow/status/fpgmaas/cookiecutter-uv/main.yml?branch=main)](https://github.com/fpgmaas/cookiecutter-uv/actions/workflows/main.yml?query=branch%3Amain)
-[![Supported Python versions](https://img.shields.io/badge/python-3.9_%7C_3.10_%7C_3.11_%7C_3.12_%7C_3.13-blue?labelColor=grey&color=blue)](https://github.com/fpgmaas/cookiecutter-uv/blob/main/pyproject.toml)
-[![Docs](https://img.shields.io/badge/docs-gh--pages-blue)](https://fpgmaas.github.io/cookiecutter-uv/)
-[![License](https://img.shields.io/github/license/fpgmaas/cookiecutter-uv)](https://img.shields.io/github/license/fpgmaas/cookiecutter-uv)
+[![Supported Python versions](https://img.shields.io/badge/python-3.11_%7C_3.12_%7C_3.13-blue?labelColor=grey&color=blue)](#)
+[![License](https://img.shields.io/badge/license-MIT-blue)](#)
 
-This is a modern Cookiecutter template that can be used to initiate a Python project with all the necessary tools for development, testing, and deployment. It supports the following features:
+This is a modern Cookiecutter template based on [cookiecutter-uv](https://github.com/fpgmaas/cookiecutter-uv) that creates Python projects with clean architecture principles, domain-driven design, and Agent OS integration. It supports the following features:
 
-- [uv](https://docs.astral.sh/uv/) for dependency management
-- Supports both [src and flat layout](https://packaging.python.org/en/latest/discussions/src-layout-vs-flat-layout/).
-- CI/CD with [GitHub Actions](https://github.com/features/actions)
-- Pre-commit hooks with [pre-commit](https://pre-commit.com/)
-- Code quality with [ruff](https://github.com/charliermarsh/ruff), [mypy](https://mypy.readthedocs.io/en/stable/)/[ty](https://docs.astral.sh/ty/) and [deptry](https://github.com/fpgmaas/deptry/).
-- Publishing to [PyPI](https://pypi.org) by creating a new release on GitHub
-- Testing and coverage with [pytest](https://docs.pytest.org/en/7.1.x/) and [codecov](https://about.codecov.io/)
-- Documentation with [MkDocs](https://www.mkdocs.org/)
-- Compatibility testing for multiple versions of Python with [tox-uv](https://github.com/tox-dev/tox-uv)
-- Containerization with [Docker](https://www.docker.com/) or [Podman](https://podman.io/)
-- Development environment with [VSCode devcontainers](https://code.visualstudio.com/docs/devcontainers/containers)
+- 🏗️ **Clean Architecture** with DDD layers (Domain, Application, Infrastructure, Presentation)
+- 🎨 **NiceGUI Frontend** for Python-based UI development
+- 📚 **MkDocs Documentation** with Mermaid diagrams and architecture visualization
+- 🎭 **Playwright Integration** for testing and interactive demos
+- 🤖 **Agent OS Integration** with product specification files
+- ⚡ **UV Package Management** for fast dependency resolution
+- 🧪 **Testing Setup** with pytest, mypy, and ruff
+- 📊 **Comprehensive Tooling** for development workflow
 
 ---
 
@@ -33,25 +28,134 @@ This is a modern Cookiecutter template that can be used to initiate a Python pro
 
 ## Quickstart
 
-On your local machine, navigate to the directory in which you want to
-create a project directory, and run the following command:
+### Prerequisites
+
+- Python 3.11+
+- [UV](https://docs.astral.sh/uv/) package manager
+- [Cookiecutter](https://cookiecutter.readthedocs.io/)
+
+### Generate a New Project
 
 ```bash
-uvx cookiecutter https://github.com/fpgmaas/cookiecutter-uv.git
+# Install cookiecutter if not already installed
+uvx install cookiecutter
+
+# Generate project from template
+uvx cookiecutter ~/code/cookiecutter-uv-agent-os-ddd
 ```
 
 or if you don't have `uv` installed yet:
 
 ```bash
 pip install cookiecutter
-cookiecutter https://github.com/fpgmaas/cookiecutter-uv.git
+cookiecutter ~/code/cookiecutter-uv-agent-os-ddd
 ```
 
-Follow the prompts to configure your project. Once completed, a new directory containing your project will be created. Then navigate into your newly created project directory and follow the instructions in the `README.md` to complete the setup of your project.
+### Template Prompts
+
+The template will prompt you for:
+
+- **Project Name**: Display name for your project
+- **Project Description**: Brief description of the project
+- **Main Idea**: Core concept and purpose of your project
+- **Key Features**: List of main features (comma-separated)
+- **Target Users**: Who will use this application and scenarios
+- **Tech Stack Preference**: Choose default or custom tech stack
+- **Author Information**: Your name, email, and GitHub handle
+
+### Post-Generation Setup
+
+The template automatically:
+
+1. ✅ Initializes git repository
+2. ✅ Sets up UV virtual environment
+3. ✅ Installs dependencies
+4. ✅ Installs Playwright browsers
+5. ✅ Creates Agent OS product files
+
+Follow the prompts to configure your project. Once completed, navigate into your newly created project directory and start developing!
+
+## Project Structure
+
+```
+your-project/
+├── .agent-os/product/          # Agent OS specification files
+│   ├── init.md                # Project initialization details
+│   ├── decisions.md           # Architecture decision records
+│   ├── mission.md             # Mission statement
+│   ├── mission-lite.md        # Brief mission overview
+│   ├── roadmap.md             # Product roadmap
+│   └── tech-stack.md          # Technology choices
+├── src/your_project/           # Source code (clean architecture)
+│   ├── domain/                # Business entities and rules
+│   ├── application/           # Use cases and orchestration
+│   ├── infrastructure/        # External integrations
+│   └── presentation/          # NiceGUI user interface
+├── tests/                     # Test files
+│   ├── playwright/            # Browser automation tests
+│   ├── unit/                  # Unit tests
+│   └── integration/           # Integration tests
+├── docs/                      # MkDocs documentation
+│   └── architecture/          # Architecture documentation
+├── pyproject.toml             # Project configuration
+└── mkdocs.yml                 # Documentation configuration
+```
+
+## Development Workflow
+
+### 1. Running the Application
+
+```bash
+cd your-project
+uv run python -m your_project
+```
+
+### 2. Development Commands
+
+```bash
+# Run tests
+uv run pytest
+
+# Type checking
+uv run mypy src/
+
+# Linting and formatting
+uv run ruff check src/
+uv run ruff format src/
+
+# Generate documentation
+uv run mkdocs serve
+```
+
+### 3. Playwright Testing
+
+```bash
+# Run integration tests
+uv run python tests/playwright/demo_main_flow.py
+
+# Run all playwright tests
+uv run pytest tests/playwright/
+```
+
+## Architecture Principles
+
+This template follows **Clean Architecture** with **Domain-Driven Design**:
+
+1. **Domain Layer**: Business entities and rules
+2. **Application Layer**: Use cases and orchestration
+3. **Infrastructure Layer**: External integrations
+4. **Presentation Layer**: NiceGUI user interface
+
+## Agent OS Integration
+
+The template creates Agent OS product specification files to help with project planning and development:
+
+- **init.md**: Project details from cookiecutter prompts
+- **decisions.md**: Architecture decision records
+- **mission.md**: Project mission and vision
+- **roadmap.md**: Development roadmap
+- **tech-stack.md**: Technology stack documentation
 
 ## Acknowledgements
 
-This project is partially based on [Audrey
-Feldroy\'s](https://github.com/audreyfeldroy)\'s great
-[cookiecutter-pypackage](https://github.com/audreyfeldroy/cookiecutter-pypackage)
-repository.
+This project is based on [Florian Maas's](https://github.com/fpgmaas) excellent [cookiecutter-uv](https://github.com/fpgmaas/cookiecutter-uv) template, extended with Agent OS integration and clean architecture principles.
