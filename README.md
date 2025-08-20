@@ -1,4 +1,4 @@
-# Cookiecutter Agent OS DDD Template
+# Cookiecutter Python,UV, Agent-OS, DDD Template
 
 A cookiecutter template for creating Python projects with Clean Architecture, Domain-Driven Design (DDD), and Agent OS integration.
 
@@ -20,8 +20,14 @@ This is a modern Cookiecutter template based on [cookiecutter-uv](https://github
 
 ---
 
+## Related Documentation
 <p align="center">
-  <a href="https://fpgmaas.github.io/cookiecutter-uv/">Documentation</a> - <a href="https://github.com/fpgmaas/cookiecutter-uv-example">Example</a>
+  <a href="https://docs.astral.sh/uv/">Astral UV</a> - 
+  <a href="https://docs.astral.sh/ruff/">Astral Ruff</a> -
+  <a href="https://buildermethods.com/agent-os">Agent-OS</a> - 
+  <a href="https://www.mkdocs.org/">MkDocs</a> - 
+  <a href="https://github.com/casey/just">Just</a> - 
+  <a href="https://martinfowler.com/bliki/DomainDrivenDesign.html">DDD</a>
 </p>
 
 ---
