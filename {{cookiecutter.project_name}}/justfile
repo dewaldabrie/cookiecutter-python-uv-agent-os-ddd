@@ -2,16 +2,20 @@
 list:
     @just --list --unsorted
 
-# Install the project in development mode
-install:
+# Development setup
+bootstrap:
     uv sync
+    uv run pre-commit install
+
+# Install the project in development mode
+install: bootstrap
 
 # Run tests
 test *args:
     uv run pytest {{ "{{" }}args{{ "}}" }}
 
 # Run tests with coverage
-test-cov:
+test-coverage:
     {% if cookiecutter.codecov == 'y' -%}
     uv run pytest --cov --cov-config=pyproject.toml --cov-report=xml --cov-report=term
     {%- else -%}
@@ -19,83 +23,61 @@ test-cov:
     {%- endif %}
 
 # Run tests in debug mode
-pdb *args:
+test-watch *args:
     uv run pytest --pdb {{ "{{" }}args{{ "}}" }}
 
 # Format code with ruff
-fmt:
+fix:
     uv run ruff format .
     uv run ruff check --fix .
+
+# Code quality
+quality: fix lint
 
 # Lint code with ruff
 lint:
     uv run ruff check .
 
-# Type check with mypy or ty
-typecheck:
-    {% if cookiecutter.type_checker == "mypy" -%}
-    uv run mypy .
-    {%- elif cookiecutter.type_checker == "ty" -%}
-    uv run ty check
-    {%- endif %}
-
-# Run all quality assurance checks
-qa: fmt lint typecheck
-
-# Run checks for continuous integration
-ci: lint typecheck test-cov
-
-# Test across multiple Python versions
-testall:
-    just test PYTHON_VERSION=3.9
-    just test PYTHON_VERSION=3.10
-    just test PYTHON_VERSION=3.11
-    just test PYTHON_VERSION=3.12
-    just test PYTHON_VERSION=3.13
-
-{% if cookiecutter.mkdocs == 'y' -%}
-# Serve documentation locally
-doc:
-    uv run mkdocs serve
-
-# Build and deploy documentation
-doc-build:
-    uv run mkdocs gh-deploy --force
-{%- endif %}
-
-# Build package
-build:
-    uv build
-
-# Clean build artifacts
-clean:
-    rm -rf build/
-    rm -rf dist/
-    rm -rf *.egg-info/
-    find . -type d -name __pycache__ -exec rm -rf {} +
-    find . -type f -name "*.pyc" -delete
-
-# Install pre-commit hooks
-pre-commit-install:
-    uv run pre-commit install
-
-# Run pre-commit on all files
+# Pre-commit
 pre-commit:
     uv run pre-commit run --all-files
 
-{% if cookiecutter.deptry == 'y' -%}
+# Serve documentation locally
+docs-serve:
+    {% if cookiecutter.mkdocs == 'y' -%}
+    uv run mkdocs serve
+    {%- endif %}
+
+# Build and deploy documentation
+docs-build:
+    {% if cookiecutter.mkdocs == 'y' -%}
+    uv run mkdocs gh-deploy --force
+    {%- endif %}
+
+# Database operations
+db-migrate:
+    @echo "Database migration placeholder - implement as needed"
+
+db-reset:
+    @echo "Database reset placeholder - implement as needed"
+
+# Docker operations
+docker-up:
+    @echo "Docker compose up placeholder - implement as needed"
+
+docker-down:
+    @echo "Docker compose down placeholder - implement as needed"
+
 # Check for unused dependencies
 deps-check:
+    {% if cookiecutter.deptry == 'y' -%}
     uv run deptry .
-{%- endif %}
+    {%- endif %}
 
 # Run playwright tests
 playwright:
     uv run python -m playwright install
     uv run python -m pytest tests/playwright/
-
-# Full development setup
-setup: install pre-commit-install
 
 # Print project version
 version:
